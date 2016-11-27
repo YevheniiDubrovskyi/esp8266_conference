@@ -1,0 +1,19 @@
+extends ./layout.pug
+
+block title
+  title Edit page for #{name} unit
+
+block links
+  link(rel='stylesheet' href='/css/edit.min.css')
+
+block content
+  section.edit
+    h2.edit-heading Change current unit
+    form(action='edit' method='POST' name='edit-form').edit-form
+      label.edit-form-lbl
+        | Unit name
+        input(type='text' name='name' value=`${name}`)
+      label.edit-form-lbl
+        | Data regular expression
+        input(type='text' name='rexp' value=`${rexp}` required).edit-form-lbl-inpt
+      button(type='submit').edit-form-btn Change unit

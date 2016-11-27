@@ -1,0 +1,15 @@
+extends ./layout.pug
+
+block title
+  title Main control page
+
+block links
+  link(rel='stylesheet' href='/css/main.min.css')
+
+block content
+  section.units
+    h2.units-heading Units list
+    ul.units-list
+      -for(let unit in unitList)
+      li.unit-list-item
+        div= unitList[unit]

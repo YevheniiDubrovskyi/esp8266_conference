@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "backend",
+      "watch": "true",
+      "script": "index.js",
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "instances": "1"
+    }
+  ]
+}
