@@ -9,7 +9,7 @@ const int led_1 = 4;
 const int led_2 = 5;
 const int DATA_BUFFER_LENGTH = 50;
 
-boolean disconnected = true;
+boolean connectionTrigger = true;
 
 void setup() {
   pinMode(led_1, OUTPUT);
@@ -25,26 +25,31 @@ void setup() {
 
   WiFi.mode(WIFI_STA); // Station mode
   delay(1000); // Required
-  WiFi.begin("", ""); // Use stored values
-  delay(4000); // Required
 
 }
 
 void connectByWPS() {
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.begin("", ""); // Use stored values
+    delay(4000); // Required
+  }
+
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(led_1, 1);
     digitalWrite(led_2, 1);
 
-    disconnected = true;
+    connectionTrigger = true;
+    Serial.println("\n[No connection]");
+
     WiFi.beginWPSConfig();
     delay(3000); // Required
   }
 
-  if (disconnected) {
+  if (connectionTrigger) {
     digitalWrite(led_1, 0);
     digitalWrite(led_2, 0);
 
-    disconnected = false;
+    connectionTrigger = false;
     Serial.println("\n[Connected to: " + WiFi.SSID() + "; IP: " + WiFi.localIP() + "]");
 
     server.begin();
@@ -76,9 +81,10 @@ void readSerial() {
 
 void sendCurrentData() {
   WiFiClient client = server.available();
-  boolean dataFlag = false;
 
   if (!client) return;
+  boolean dataFlag = false;
+  boolean readOnlyFirstLineFlag = true;
 
   digitalWrite(led_2, 1);
   Serial.println("\n[Client connected]");
@@ -97,12 +103,16 @@ void sendCurrentData() {
       client.println(getHeaders() + getBody());
       break;
     }
+
+    if (readOnlyFirstLineFlag && !dataFlag) {
+      break;
+    }
   }
 
   delay(5); // Required
   client.stop();
   client.flush();
-  Serial.println("[Client disconnected]");
+  Serial.println("[Client connected]");
   digitalWrite(led_2, 0);
 }
 

@@ -20,6 +20,7 @@
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "libnmap": "^0.3.8",
     "mongodb": "^2.2.11",
     "mongoose": "^4.7.0",
     "morgan": "^1.7.0",
