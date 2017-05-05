@@ -1,0 +1,17 @@
+extends ./layout.pug
+
+block title
+  title Chart page for #{name} unit
+
+block links
+  link(rel='stylesheet' href='../css/chart.min.css')
+
+block scripts
+  script(src='../js/highcharts.min.js' defer)
+  script(src='../js/chart.min.js' defer)
+
+block content
+  section.chart-view-port
+    h2= unit.name
+    p#id= unit.id
+    div#chart

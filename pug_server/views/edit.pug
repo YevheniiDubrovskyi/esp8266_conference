@@ -1,0 +1,39 @@
+extends ./layout.pug
+
+block title
+  title Edit page for #{name} unit
+
+block links
+  link(rel='stylesheet' href='/css/edit.min.css')
+
+block content
+  section.section.add
+    h2.section-heading Add section
+    p.setion-text Add new unit to datebase
+    label.section-lbl
+      | Unit name
+      input(type='text')#add-name.section-lbl-inpt
+    label.section-lbl
+      | Unit ip
+      input(type='text')#add-ip.section-lbl-inpt
+    label.section-lbl
+      | Data pattern (regular expression)
+      input(type='text')#add-data-regexp.section-lbl-inpt
+    label.section-lbl
+      | Data url (regular expression)
+      input(type='text')#add-data-url.section-lbl-inpt
+
+    label.section-lbl
+      | First switcher name
+      input(type='text')#add-first-sw-name.section-lbl-inpt
+    label.section-lbl
+      | First switcher url (regular expression)
+      input(type='text')#add-first-sw-url.section-lbl-inpt
+
+    label.section-lbl
+      | Second switcher name
+      input(type='text')#add-second-sw-name.section-lbl-inpt
+    label.section-lbl
+      | Second switcher url (regular expression)
+      input(type='text')#add-second-sw-url.section-lbl-inpt
+    button.btn(type='button')#add-btn Add new unit

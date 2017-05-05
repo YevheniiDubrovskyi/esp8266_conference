@@ -5,18 +5,50 @@ String latestData = "";
 
 WiFiServer server(80);
 
-const int led_1 = 4;
-const int led_2 = 5;
+const int LED_RGY_4 = 4;
+const int LED_RGY_5 = 5;
+const int LED_Y_WiFi = 12;
+const int LED_Y_COM = 13;
+const int LED_G__POWER = 16;
+const int LED_R = 14;
+
 const int DATA_BUFFER_LENGTH = 50;
 
 boolean connectionTrigger = true;
 
-void setup() {
-  pinMode(led_1, OUTPUT);
-  pinMode(led_2, OUTPUT);
+void setYellowRGY() {
+  digitalWrite(LED_RGY_4, 0);
+  digitalWrite(LED_RGY_5, 0);
+}
 
-  digitalWrite(led_1, 0);
-  digitalWrite(led_2, 0);
+void setGreenRGY() {
+  digitalWrite(LED_RGY_4, 1);
+  digitalWrite(LED_RGY_5, 0);
+}
+
+void setRedRGY() {
+  digitalWrite(LED_RGY_4, 0);
+  digitalWrite(LED_RGY_5, 1);
+}
+
+void setNullRGY() {
+  digitalWrite(LED_RGY_4, 1);
+  digitalWrite(LED_RGY_5, 1);
+}
+
+void setup() {
+  pinMode(LED_RGY_4, OUTPUT);
+  pinMode(LED_RGY_5, OUTPUT);
+  pinMode(LED_Y_WiFi, OUTPUT);
+  pinMode(LED_Y_COM, OUTPUT);
+  pinMode(LED_G__POWER, OUTPUT);
+  pinMode(LED_R, OUTPUT);
+
+  setNullRGY();
+  digitalWrite(LED_Y_WiFi, 0);
+  digitalWrite(LED_Y_COM, 0);
+  digitalWrite(LED_G__POWER, 0);
+  digitalWrite(LED_R, 0);
 
   serialBuffer.reserve(DATA_BUFFER_LENGTH);
   latestData.reserve(DATA_BUFFER_LENGTH);
@@ -25,18 +57,21 @@ void setup() {
 
   WiFi.mode(WIFI_STA); // Station mode
   delay(1000); // Required
-
 }
 
 void connectByWPS() {
   if (WiFi.status() != WL_CONNECTED) {
+    setRedRGY();
     WiFi.begin("", ""); // Use stored values
     delay(4000); // Required
+
+    if (WiFi.status() == WL_CONNECTED) {
+      connectionTrigger = true;
+    }
   }
 
   while (WiFi.status() != WL_CONNECTED) {
-    digitalWrite(led_1, 1);
-    digitalWrite(led_2, 1);
+    setRedRGY();
 
     connectionTrigger = true;
     Serial.println("\n[No connection]");
@@ -46,8 +81,7 @@ void connectByWPS() {
   }
 
   if (connectionTrigger) {
-    digitalWrite(led_1, 0);
-    digitalWrite(led_2, 0);
+    setYellowRGY();
 
     connectionTrigger = false;
     Serial.println("\n[Connected to: " + WiFi.SSID() + "; IP: " + WiFi.localIP() + "]");
@@ -61,7 +95,7 @@ void readSerial() {
 
   while (Serial.available()) {
     dataFlag = true;
-    digitalWrite(led_1, 1);
+    digitalWrite(LED_Y_COM, 1);
 
     if (serialBuffer.length() >= DATA_BUFFER_LENGTH) {
       serialBuffer = "";
@@ -76,7 +110,7 @@ void readSerial() {
     }
   }
 
-  if (dataFlag) digitalWrite(led_1, 0);
+  if (dataFlag) digitalWrite(LED_Y_COM, 0);
 }
 
 void sendCurrentData() {
@@ -86,17 +120,27 @@ void sendCurrentData() {
   boolean dataFlag = false;
   boolean readOnlyFirstLineFlag = true;
 
-  digitalWrite(led_2, 1);
+  setGreenRGY();
   Serial.println("\n[Client connected]");
 
   while (client.connected()) {
     if (!client.available()) continue;
+    digitalWrite(LED_Y_WiFi, 1);
 
     String line = client.readStringUntil('\r');
     Serial.println(line);
 
     if (line.indexOf("/data") != -1) {
       dataFlag = true;
+    }
+
+    if (line.indexOf("/power") != -1) {
+      if (line.indexOf("/on") != -1) {
+        digitalWrite(LED_G__POWER, 1);
+      } else if (line.indexOf("/off") != -1) {
+        digitalWrite(LED_G__POWER, 0);
+      }
+      break;
     }
 
     if (dataFlag) {
@@ -108,15 +152,16 @@ void sendCurrentData() {
       client.println(getHeaders(false));
       break;
     }
+
+    digitalWrite(LED_Y_WiFi, 0);
   }
 
   delay(5); // Required
   client.stop();
   client.flush();
   Serial.println("[Client disconnected]");
-  digitalWrite(led_2, 0);
+  setYellowRGY();
 }
-
 
 String getHeaders(boolean JSONFlag) {
   String optionalJSON;
@@ -128,7 +173,7 @@ String getHeaders(boolean JSONFlag) {
 
   String headers = String("HTTP/1.1 200 OK\r\n") +
                           optionalJSON +
-                          "Unit-Type: test1\r\n" +
+                          "Unit-Type: esp8266\r\n" +
                           "Connection: close\r\n" +
                           "\r\n";
 

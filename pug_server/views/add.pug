@@ -1,0 +1,61 @@
+extends ./layout.pug
+
+block title
+  title Add new unit
+
+block links
+  link(rel='stylesheet' href='css/add.min.css')
+
+block scripts
+  script(src='js/bluebird.min.js' defer)
+  script(src='js/add.min.js' defer)
+
+block content
+  section.section.scan
+    h2.section-heading Scan section
+    p.section-text Get available units in local network
+    button.btn(type='button')#scan-btn Scan network
+    pre.section-pre#scan-output
+
+  section.section.test
+    h2.section-heading Testing section
+    p.section-text Send request to ip address with url from inputs
+    label.section-lbl
+      | Tested ip address
+      input(type='text')#tested-ip.section-lbl-inpt
+    label.section-lbl
+      | Tested ip url
+      input(type='text')#tested-url.section-lbl-inpt
+    button.btn(type='button')#tested-btn Send request
+    pre.section-pre#tested-output
+
+  section.section.add
+    h2.section-heading Adding section
+    p.setion-text Add new unit to datebase
+    label.section-lbl
+      | Unit name
+      input(type='text')#add-name.section-lbl-inpt
+    label.section-lbl
+      | Unit ip
+      input(type='text')#add-ip.section-lbl-inpt
+    label.section-lbl
+      | Data pattern (regular expression)
+      input(type='text')#add-data-regexp.section-lbl-inpt
+    label.section-lbl
+      | Data url 
+      input(type='text')#add-data-url.section-lbl-inpt
+
+    label.section-lbl
+      | First switcher name
+      input(type='text')#add-first-sw-name.section-lbl-inpt
+    label.section-lbl
+      | First switcher url (regular expression)
+      input(type='text')#add-first-sw-url.section-lbl-inpt
+
+    label.section-lbl
+      | Second switcher name
+      input(type='text')#add-second-sw-name.section-lbl-inpt
+    label.section-lbl
+      | Second switcher url (regular expression)
+      input(type='text')#add-second-sw-url.section-lbl-inpt
+    button.btn(type='button')#add-btn Add new unit

@@ -1,0 +1,26 @@
+extends ./layout.pug
+
+block title
+  title Main control page
+
+block links
+  link(rel='stylesheet' href='css/main.min.css')
+
+block content
+  a(href='/add') Go to adding page
+
+  section.section.units
+    h2.section-heading Units list
+    ul.section-list
+    -for(let unit in unitsList)
+      li.unit-list-item
+        h3= unitsList[unit].name
+        h4 Unit type name:
+        p= unitsList[unit].unitType
+        h4 Data pattern:
+        p= unitsList[unit].regExp
+        h4 Data url:
+        p= unitsList[unit].data
+        h4 IP:
+        p= unitsList[unit].ip
+        a(href=`/chart/${unitsList[unit].id}`) Show unit real-time chart

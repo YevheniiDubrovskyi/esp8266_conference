@@ -1,0 +1,83 @@
+@import 'normalize'
+@import 'vars'
+
+html,
+body
+  margin: 0
+  padding: 0
+  font-family: 'Titillium Web', sans-serif
+  background-color: $light-grey
+  color: $main-color
+
+a
+  text-decoration: none
+  color: inherit
+
+ul
+  list-style: none
+  padding: 0
+  margin: 0
+
+label
+  display: block
+  font-size: 1.3rem
+  margin: 1rem 0
+
+input,
+button
+  background: none
+  border: none
+
+input
+  display: inline-block
+  padding: .3em .7em
+  box-sizing: border-box;
+  background-color: $white
+  box-shadow: 2px 2px 2px $regular-grey inset
+
+label,
+input
+  font-family: 'VT323', monospace
+
+button
+  display: block
+  border: 1px solid $regular-grey
+  padding: .5em 1.2em
+  border-radius: .2em
+  font-family: 'Titillium Web', sans-serif
+  color: #4a4a4a
+  transition: .3s ease-in-out
+  text-transform: uppercase
+  margin: 1rem auto
+
+  &:hover
+    border-color: #000
+    color: #000
+
+a
+  text-decoration: none
+  display: inline-block
+  border: 1px solid $regular-grey
+  padding: .5em 1.2em
+  border-radius: .2em
+  font-family: 'Titillium Web', sans-serif
+  color: #4a4a4a
+  transition: .3s ease-in-out
+  text-transform: uppercase
+  margin: 1rem auto
+
+  &:hover
+    border-color: #000
+    color: #000
+
+h2,
+p
+  margin: .3em 0
+
+section
+  border-bottom: 5px solid $medium-grey
+
+.content-wrapper
+  max-width: 700px
+  width: 100%
+  margin: 0 auto
