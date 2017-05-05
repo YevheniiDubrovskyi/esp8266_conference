@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
     console.log('Initial App State', this.appState.state);
   }
 
-}
+};
 
 /*
  * Please review the https://github.com/AngularClass/angular2-examples/ repo for
