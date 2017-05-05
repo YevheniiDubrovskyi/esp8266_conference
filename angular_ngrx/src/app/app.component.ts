@@ -1,82 +1,42 @@
-/*
- * Angular 2 decorators and services
- */
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation
-} from '@angular/core';
-import { AppState } from './app.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TransferState } from '../modules/transfer-state/transfer-state';
 
-/*
- * App Component
- * Top Level Component
- */
+import { views } from './app-nav-views';
+import { MOBILE } from './services/constants';
+
 @Component({
-  selector: 'app',
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './app.component.css'
-  ],
-  template: `
-    <nav>
-      <a [routerLink]=" ['./'] "
-        routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">
-        Index
-      </a>
-      <a [routerLink]=" ['./home'] "
-        routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">
-        Home
-      </a>
-      <a [routerLink]=" ['./detail'] "
-        routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">
-        Detail
-      </a>
-      <a [routerLink]=" ['./barrel'] "
-        routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">
-        Barrel
-      </a>
-      <a [routerLink]=" ['./about'] "
-        routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">
-        About
-      </a>
-    </nav>
-
-    <main>
-      <router-outlet></router-outlet>
-    </main>
-
-    <pre class="app-state">this.appState.state = {{ appState.state | json }}</pre>
-
-    <footer>
-      <span>WebPack Angular 2 Starter by <a [href]="url">@AngularClass</a></span>
-      <div>
-        <a [href]="url">
-          <img [src]="angularclassLogo" width="25%">
-        </a>
-      </div>
-    </footer>
-  `
+  selector: 'my-app',
+  styleUrls: ['./app.component.css'],
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
-  public angularclassLogo = 'assets/img/angularclass-avatar.png';
-  public name = 'Angular 2 Webpack Starter';
-  public url = 'https://twitter.com/AngularClass';
+  showMonitor = (ENV === 'development' && !AOT &&
+    ['monitor', 'both'].includes(STORE_DEV_TOOLS) // set in constants.js file in project root
+  );
+  mobile = MOBILE;
+  sideNavMode = MOBILE ? 'over' : 'side';
+  views = views;
 
   constructor(
-    public appState: AppState
-  ) {}
+    private cache: TransferState,
+    public route: ActivatedRoute,
+    public router: Router
+  ) { }
 
-  public ngOnInit() {
-    console.log('Initial App State', this.appState.state);
+  ngOnInit() {
+    this.cache.set('cached', true);
   }
 
-};
+  activateEvent(event) {
+    if (ENV === 'development') {
+      console.log('Activate Event:', event);
+    }
+  }
 
-/*
- * Please review the https://github.com/AngularClass/angular2-examples/ repo for
- * more angular app examples that you may copy/paste
- * (The examples may not be updated as quickly. Please open an issue on github for us to update it)
- * For help or questions please contact us at @AngularClass on twitter
- * or our chat on Slack at https://AngularClass.com/slack-join
- */
+  deactivateEvent(event) {
+    if (ENV === 'development') {
+      console.log('Deactivate Event', event);
+    }
+  }
+}

@@ -1,22 +1,18 @@
-/*
- * Angular bootstraping
- */
-import { platformBrowser } from '@angular/platform-browser';
-import { decorateModuleRef } from './app/environment';
-/*
- * App Module
- * our top level module that holds all of our components
- */
-import { AppModuleNgFactory } from '../compiled/src/app/app.module.ngfactory';
+import './polyfills.browser.aot';
+import './rxjs.imports';
+declare var ENV: string;
 
-/*
- * Bootstrap our Angular app with a top level NgModule
- */
-export function main(): Promise<any> {
-  return platformBrowser()
-    .bootstrapModuleFactory(AppModuleNgFactory)
-    .then(decorateModuleRef)
-    .catch((err) => console.error(err));
+import { enableProdMode } from '@angular/core';
+import { platformBrowser } from '@angular/platform-browser';
+import { BrowserAppModuleNgFactory } from '../compiled/src/app/browser.app.module.ngfactory';
+
+if ('production' === ENV) {
+  enableProdMode();
+}
+
+export function main() {
+  return platformBrowser().bootstrapModuleFactory(BrowserAppModuleNgFactory)
+    .catch(err => console.log(err));
 }
 
 export function bootstrapDomReady() {

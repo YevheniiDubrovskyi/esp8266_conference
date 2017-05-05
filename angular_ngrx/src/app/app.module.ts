@@ -1,114 +1,71 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import {
-  NgModule,
-  ApplicationRef
-} from '@angular/core';
-import {
-  removeNgStyles,
-  createNewHosts,
-  createInputTransfer
-} from '@angularclass/hmr';
-import {
-  RouterModule,
-  PreloadAllModules
-} from '@angular/router';
-
-/*
- * Platform and Environment providers/directives/pipes
- */
-import { ENV_PROVIDERS } from './environment';
-import { ROUTES } from './app.routes';
-// App is our top level component
-import { AppComponent } from './app.component';
-import { APP_RESOLVER_PROVIDERS } from './app.resolver';
-import { AppState, InternalStateType } from './app.service';
-import { HomeComponent } from './home';
-import { AboutComponent } from './about';
-import { NoContentComponent } from './no-content';
-import { XLargeDirective } from './home/x-large';
-
-import '../styles/styles.scss';
-import '../styles/headings.css';
-
-// Application wide providers
-const APP_PROVIDERS = [
-  ...APP_RESOLVER_PROVIDERS,
-  AppState
-];
-
-type StoreType = {
-  state: InternalStateType,
-  restoreInputValues: () => void,
-  disposeOldHosts: () => void
-};
-
 /**
- * `AppModule` is the main entry point into Angular2's bootstraping process
+ * This module is the entry for your App when NOT using universal.
+ *
+ * Make sure to use the 3 constant APP_ imports so you don't have to keep
+ * track of your root app dependencies here. Only import directly in this file if
+ * there is something that is specific to the environment.
  */
+
+import { ApplicationRef, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
+
+import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
+
+import { Store } from '@ngrx/store';
+
+import { APP_DECLARATIONS } from './app.declarations';
+import { APP_ENTRY_COMPONENTS } from './app.entry-components';
+import { APP_IMPORTS } from './app.imports';
+import { APP_PROVIDERS } from './app.providers';
+
+import { AppComponent } from './app.component';
+
+import { AppState } from './reducers';
+
 @NgModule({
-  bootstrap: [ AppComponent ],
   declarations: [
     AppComponent,
-    AboutComponent,
-    HomeComponent,
-    NoContentComponent,
-    XLargeDirective
+    APP_DECLARATIONS
   ],
-  imports: [ // import Angular's modules
+  entryComponents: [APP_ENTRY_COMPONENTS],
+  imports: [
+    APP_IMPORTS,
     BrowserModule,
-    FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
   ],
-  providers: [ // expose our Services and Providers into Angular's dependency injection
-    ENV_PROVIDERS,
-    APP_PROVIDERS
-  ]
+  bootstrap: [AppComponent],
+  providers: [APP_PROVIDERS]
 })
+
 export class AppModule {
+  constructor(public appRef: ApplicationRef,
+    private _store: Store<AppState>) { }
 
-  constructor(
-    public appRef: ApplicationRef,
-    public appState: AppState
-  ) {}
+  hmrOnInit(store) {
+    if (!store || !store.rootState) return;
 
-  public hmrOnInit(store: StoreType) {
-    if (!store || !store.state) {
-      return;
-    }
-    console.log('HMR store', JSON.stringify(store, null, 2));
-    // set state
-    this.appState._state = store.state;
-    // set input values
-    if ('restoreInputValues' in store) {
-      let restoreInputValues = store.restoreInputValues;
-      setTimeout(restoreInputValues);
+    // restore state by dispatch a SET_ROOT_STATE action
+    if (store.rootState) {
+      this._store.dispatch({
+        type: 'SET_ROOT_STATE',
+        payload: store.rootState
+      });
     }
 
+    if ('restoreInputValues' in store) { store.restoreInputValues(); }
     this.appRef.tick();
-    delete store.state;
-    delete store.restoreInputValues;
+    Object.keys(store).forEach(prop => delete store[prop]);
   }
-
-  public hmrOnDestroy(store: StoreType) {
-    const cmpLocation = this.appRef.components.map((cmp) => cmp.location.nativeElement);
-    // save state
-    const state = this.appState._state;
-    store.state = state;
-    // recreate root elements
+  hmrOnDestroy(store) {
+    const cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement);
+    this._store.take(1).subscribe(s => store.rootState = s);
     store.disposeOldHosts = createNewHosts(cmpLocation);
-    // save input values
-    store.restoreInputValues  = createInputTransfer();
-    // remove styles
+    store.restoreInputValues = createInputTransfer();
     removeNgStyles();
   }
-
-  public hmrAfterDestroy(store: StoreType) {
-    // display new elements
+  hmrAfterDestroy(store) {
     store.disposeOldHosts();
     delete store.disposeOldHosts;
   }
-
 }
