@@ -1,3 +1,7 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChartModule } from 'angular2-highcharts';
+import * as highcharts from 'highcharts';
+
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { MaterialModule } from '@angular/material';
@@ -10,10 +14,10 @@ import { useLogMonitor } from '@ngrx/store-log-monitor';
 
 import { TransferHttpModule } from '../modules/transfer-http/transfer-http.module';
 
-import { routes } from './app.routing';
+import { routes } from './app.routes';
 import { rootReducer } from './reducers';
 import { StoreDevToolsModule } from './features/store-devtools.module';
-import { UserEffects } from './user/user.effects';
+// import { UserEffects } from './user/user.effects';
 
 const STORE_DEV_TOOLS_IMPORTS = [];
 if (ENV === 'development' && !AOT &&
@@ -28,13 +32,14 @@ if (ENV === 'development' && !AOT &&
 ]);
 
 export const APP_IMPORTS = [
-  EffectsModule.run(UserEffects),
-  // MaterialModule,
+  // EffectsModule.run(UserEffects),
   ReactiveFormsModule,
   RouterModule.forRoot(routes, { useHash: false, preloadingStrategy: PreloadAllModules }),
   RouterStoreModule.connectRouter(),
   StoreModule.provideStore(rootReducer),
   STORE_DEV_TOOLS_IMPORTS,
   StoreDevToolsModule,
-  TransferHttpModule
+  TransferHttpModule,
+  BrowserAnimationsModule,
+  ChartModule.forRoot(highcharts)
 ];

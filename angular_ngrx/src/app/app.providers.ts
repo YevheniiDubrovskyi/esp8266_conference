@@ -1,7 +1,7 @@
-import { UserActions } from './user/user.actions';
-import { UserService } from './user/user.service';
+import { HomeService } from './modules/home/home.service';
+import { HomeActions } from './modules/home/home.actions';
 
 export const APP_PROVIDERS = [
-  UserActions,
-  UserService
+  HomeService,
+  HomeActions
 ];

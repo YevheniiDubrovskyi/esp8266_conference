@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransferState } from '../modules/transfer-state/transfer-state';
 
-import { views } from './app-nav-views';
-import { MOBILE } from './services/constants';
+// import { MOBILE } from './services/constants';
 
 @Component({
-  selector: 'my-app',
+  selector: 'app',
   styleUrls: ['./app.component.css'],
   templateUrl: './app.component.html'
 })
@@ -14,9 +13,8 @@ export class AppComponent implements OnInit {
   showMonitor = (ENV === 'development' && !AOT &&
     ['monitor', 'both'].includes(STORE_DEV_TOOLS) // set in constants.js file in project root
   );
-  mobile = MOBILE;
-  sideNavMode = MOBILE ? 'over' : 'side';
-  views = views;
+  // mobile = MOBILE;
+  // sideNavMode = MOBILE ? 'over' : 'side';
 
   constructor(
     private cache: TransferState,

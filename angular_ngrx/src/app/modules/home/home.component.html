@@ -1,0 +1,53 @@
+<!-- <h2 class="home">Hello HOME component!</h2>
+<button class="home-btn"
+        type="button"
+        (click)="onTestBtnClick($event)">
+  Dispatch test action
+</button -->
+
+<section class="home">
+  <h2 class="home-header">Unit control and monitoring system</h2>
+
+  <ul class="home-controls_list">
+    <li class="home-controls_list-item">
+      <button md-raised-button
+              (click)="onAddButtonClick($event)">
+        Add Unit
+      </button>
+    </li>
+  </ul>
+
+  <section class="home-units">
+    <h3 class="home-units-header">Saved units:</h3>
+
+    <ul class="home-units-list">
+      <!-- <li *ngFor="let unit of units"
+          class="home-units-list-item">
+        <md-card class="home-units-list-item-card">
+          <md-card-title>unit.title</md-card-title>
+          <md-card-subtitle>unit.subTitle</md-card-subtitle>
+
+          <chart [options]="unit.chartOptions"></chart>
+
+          <md-card-content>unit.description</md-card-content>
+        </md-card>
+      </li> -->
+      <li class="home-units-list-item">
+        <md-card class="home-units-list-item-card">
+          <md-card-title>Частотомер Ч3-54</md-card-title>
+          <md-card-subtitle>Аудитория 43, №08932</md-card-subtitle>
+
+          <chart [options]="options_1">
+          </chart>
+
+          <md-card-content>Диапазон частот - 0,1 ГГц-300 МГц. Погрешность по частоте кварцевого генератора за 1 месяц - 1,5*10-7.
+Уровень выходного сигнала - 0,1 - 100 В (0,1 Гц - 120 МГц), 0,2-3 В (120-300 МГц).
+Диапазон при измерении отношения частот - 10 Гц - 150 МГц; 0 - 1 МГц.
+Частота выдаваемого сигнала - 0,1; 1; 10; 100 Гц; 1; 10; 1; 5; 10 и 50 МГц. Габаритные размеры, мм; масса, кг 490X135X480; 16.
+          </md-card-content>
+        </md-card>
+      </li>
+    </ul>
+  </section>
+</section>
+

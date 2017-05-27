@@ -28,19 +28,27 @@ import { AppState } from './reducers';
     AppComponent,
     APP_DECLARATIONS
   ],
-  entryComponents: [APP_ENTRY_COMPONENTS],
+  entryComponents: [
+    APP_ENTRY_COMPONENTS
+  ],
   imports: [
     APP_IMPORTS,
     BrowserModule,
     HttpModule,
   ],
-  bootstrap: [AppComponent],
-  providers: [APP_PROVIDERS]
+  bootstrap: [
+    AppComponent
+  ],
+  providers: [
+    APP_PROVIDERS
+  ]
 })
-
 export class AppModule {
-  constructor(public appRef: ApplicationRef,
-    private _store: Store<AppState>) { }
+
+  constructor(
+    public appRef: ApplicationRef, // TODO: Investigation - what the heck is this?
+    private _store: Store<AppState>
+  ) { }
 
   hmrOnInit(store) {
     if (!store || !store.rootState) return;
@@ -54,18 +62,23 @@ export class AppModule {
     }
 
     if ('restoreInputValues' in store) { store.restoreInputValues(); }
-    this.appRef.tick();
+    this.appRef.tick(); // TODO: Investigation - what the heck is this?
     Object.keys(store).forEach(prop => delete store[prop]);
   }
+
   hmrOnDestroy(store) {
     const cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement);
+
     this._store.take(1).subscribe(s => store.rootState = s);
     store.disposeOldHosts = createNewHosts(cmpLocation);
     store.restoreInputValues = createInputTransfer();
+
     removeNgStyles();
   }
+
   hmrAfterDestroy(store) {
     store.disposeOldHosts();
     delete store.disposeOldHosts;
   }
+
 }
